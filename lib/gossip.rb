@@ -7,20 +7,6 @@ class Gossip
     self.author = author
     self.content = content
   end
-  
-  # def save_as_json
-  #   temp_hash = {author: self.author, content: self.content}
-
-  #   json = File.read('db/gossip.json')
-  #   data_h = JSON.parse(json.to_json) 
-  #   puts data_h
-  #   puts data_h.class
-  #   # File.open("db/gossip.json", "a") do |f|
-  #   #   f.puts JSON.parse(json) << JSON.pretty_generate(params)
-  #   # end
-  #   File.write("db/gossip.json", JSON.pretty_generate(temp_hash), File.size("db/gossip.json"), mode: 'a')
-  #   # , File.size("db/gossip.json"), mode: 'a'
-  # end
 
   def save_as_csv
     CSV.open("db/gossip.csv","a",headers: true) do |csv| 
@@ -48,11 +34,12 @@ class Gossip
     return all_gossips
   end
 
-  def self.destroy_gossip(index_to_be_destroyed)
-    table = CSV.table("db/gossip.csv")
-    table.delete(index_to_be_destroyed)
+  def update(id)
+    table = CSV.table("db/gossip.csv", headers: true)
+    table[id][:author] = author
+    table[id][:content] = content
     File.open("db/gossip.csv",'w') do |f|
       f.write(table.to_csv)
-    end
+    end    
   end
 end
